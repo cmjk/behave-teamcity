@@ -25,12 +25,12 @@ class TeamcityFormatter(Formatter):
 
         self.current_scenario = scenario
         self.current_step = None
-        self.msg.testStarted(self.current_scenario.name, captureStandardOutput='false')
+        self.msg.testStarted(self.current_scenario.name, captureStandardOutput='true')
 
-    def step(self, step):
-        self.current_step = step
 
     def result(self, step_result):
+        self.current_step = step_result
+        self.msg.message('stepStatus', name=self.current_step.name, status=self.current_step.status, duration=str(self.current_step.duration))
         if self.current_scenario.status == "untested":
             return
 

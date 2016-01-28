@@ -26,6 +26,7 @@ class TeamcityFormatter(Formatter):
         self.current_scenario = scenario
         self.current_step = None
         self.msg.testStarted(self.current_scenario.name, captureStandardOutput='true')
+        self.msg.blockOpened(scenario.name)
 
 
     def result(self, step_result):
@@ -35,10 +36,12 @@ class TeamcityFormatter(Formatter):
             return
 
         if self.current_scenario.status == "passed":
+            self.msg.blockClosed(self.current_scenario.name)
             self.msg.message('testFinished', name=self.current_scenario.name,
                              duration=str(self.current_scenario.duration), flowId=None)
 
         if self.current_scenario.status == "failed":
+            self.msg.blockClosed(self.current_scenario.name)
             name = self.current_step.name
 
             error_msg = "Step failed: {}".format(name)

@@ -30,7 +30,8 @@ class TeamcityFormatter(Formatter):
 
     def result(self, step_result):
         self.current_step = step_result
-        self.msg.progressMessage(self.current_step.status + ' step ' + self.current_step.name + ' in ' + str(round(self.current_step.duration, 3)) + ' s')
+        if self.current_step.status == "passed":
+            self.msg.message('testStdOut', name=self.current_step.name, duration=str(self.current_step.duration))
         if self.current_scenario.status == "untested":
             return
 

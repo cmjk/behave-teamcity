@@ -33,18 +33,18 @@ class TeamcityFormatter(Formatter):
 
         self.current_step = step_result
         if self.current_step.status == "passed":
-            self.step_messages += ('\n-> done: ' + self.current_step.name + '  (' + str(round(self.current_step.duration, 1)) + 's)')
+            self.step_messages += ('-> done: ' + self.current_step.name + '  (' + str(round(self.current_step.duration, 1)) + 's)\n')
         if self.current_scenario.status == "untested":
             return
 
         if self.current_scenario.status == "passed":
-            self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages)
+            self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages[:-1])
             self.step_messages = ''
             self.msg.message('testFinished', name=self.current_scenario.name,
                              duration=str(self.current_scenario.duration), flowId=None)
 
         if self.current_scenario.status == "failed":
-            self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages)
+            self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages[:-1])
             self.step_messages = ''
             name = self.current_step.name
 

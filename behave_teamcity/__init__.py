@@ -26,7 +26,7 @@ class TeamcityFormatter(Formatter):
 
         self.current_scenario = scenario
         self.current_step = None
-        self.msg.testStarted(self.current_scenario.name, captureStandardOutput='false')
+        self.msg.testStarted(self.current_scenario.name, captureStandardOutput='true')
 
 
     def result(self, step_result):

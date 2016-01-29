@@ -38,13 +38,13 @@ class TeamcityFormatter(Formatter):
             return
 
         if self.current_scenario.status == "passed":
-            self.msg.message('testStdOut', name=self.current_scenario.name, out=self.step_messages)
+            self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages)
             self.step_messages = ''
             self.msg.message('testFinished', name=self.current_scenario.name,
                              duration=str(self.current_scenario.duration), flowId=None)
 
         if self.current_scenario.status == "failed":
-            self.msg.message('testStdOut', name=self.current_scenario.name, out=self.step_messages)
+            self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages)
             self.step_messages = ''
             name = self.current_step.name
 

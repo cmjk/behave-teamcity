@@ -17,7 +17,7 @@ class TeamcityFormatter(Formatter):
         self.current_feature = feature
         self.current_scenario = None
         self.current_step = None
-        self.msg.testSuiteStarted(self.current_feature.name)
+        self.msg.testSuiteStarted('Running feature file ' + self.current_feature.name)
 
     def scenario(self, scenario):
         if self.current_scenario and self.current_scenario.status == "skipped":
@@ -26,22 +26,19 @@ class TeamcityFormatter(Formatter):
         self.current_scenario = scenario
         self.current_step = None
         self.msg.testStarted(self.current_scenario.name, captureStandardOutput='true')
-        self.msg.blockOpened(scenario.name)
 
 
     def result(self, step_result):
         self.current_step = step_result
-        self.msg.message('stepStatus', name=self.current_step.name, status=self.current_step.status, duration=str(self.current_step.duration))
+        self.msg.progressMessage(self.current_step.status + ' step ' + self.current_step.name + ' in ' + str(round(self.current_step.duration, 3)) + ' s')
         if self.current_scenario.status == "untested":
             return
 
         if self.current_scenario.status == "passed":
-            self.msg.blockClosed(self.current_scenario.name)
             self.msg.message('testFinished', name=self.current_scenario.name,
                              duration=str(self.current_scenario.duration), flowId=None)
 
         if self.current_scenario.status == "failed":
-            self.msg.blockClosed(self.current_scenario.name)
             name = self.current_step.name
 
             error_msg = "Step failed: {}".format(name)

@@ -20,6 +20,7 @@ class TeamcityFormatter(Formatter):
         self.msg.testSuiteStarted('Running feature file ' + self.current_feature.name)
 
     def scenario(self, scenario):
+        self.step_messages = ''
         if self.current_scenario and self.current_scenario.status == "skipped":
             self.msg.testIgnored(self.current_scenario.name)
 
@@ -29,17 +30,22 @@ class TeamcityFormatter(Formatter):
 
 
     def result(self, step_result):
+
         self.current_step = step_result
         if self.current_step.status == "passed":
-            self.msg.message('testStdErr', name=self.current_step.name, out='-> done: ' + self.current_step.name + '  (' + str(round(self.current_step.duration, 1)) + 's)')
+            self.step_messages += ('-> done: ' + self.current_step.name + '  (' + str(round(self.current_step.duration, 1)) + 's)\n')
         if self.current_scenario.status == "untested":
             return
 
         if self.current_scenario.status == "passed":
+            self.msg.message('testStdOut', name=self.current_scenario.name, out=self.step_messages)
+            self.step_messages = ''
             self.msg.message('testFinished', name=self.current_scenario.name,
                              duration=str(self.current_scenario.duration), flowId=None)
 
         if self.current_scenario.status == "failed":
+            self.msg.message('testStdOut', name=self.current_scenario.name, out=self.step_messages)
+            self.step_messages = ''
             name = self.current_step.name
 
             error_msg = "Step failed: {}".format(name)

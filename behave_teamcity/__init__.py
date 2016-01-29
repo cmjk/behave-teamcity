@@ -33,7 +33,7 @@ class TeamcityFormatter(Formatter):
 
         self.current_step = step_result
         if self.current_step.status == "passed":
-            self.step_messages += ('-> done: ' + self.current_step.name + '  (' + str(round(self.current_step.duration, 1)) + 's)\n')
+            self.step_messages += ('-> done: ' + self.current_step.name + '  (' + str(round(self.current_step.duration, 1)) + 's)|n')
         if self.current_scenario.status == "untested":
             return
 

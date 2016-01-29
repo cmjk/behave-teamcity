@@ -17,7 +17,7 @@ class TeamcityFormatter(Formatter):
         self.current_feature = feature
         self.current_scenario = None
         self.current_step = None
-        self.msg.testSuiteStarted('Running feature file ' + self.current_feature.name)
+        self.msg.testSuiteStarted(self.current_feature.name)
 
     def scenario(self, scenario):
         self.step_messages = ''

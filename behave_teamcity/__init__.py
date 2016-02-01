@@ -6,7 +6,7 @@ from teamcity.messages import TeamcityServiceMessages
 class BehaveTeamCityServiceMessages(TeamcityServiceMessages):
     def message(self, messageName, **properties):
         timestamp = self.now().strftime("%Y-%m-%dT%H:%M:%S.") + "%03d" % (self.now().microsecond / 1000)
-        message = ("\n##teamcity[%s timestamp='%s'" % (messageName, timestamp))
+        message = ("##teamcity[%s timestamp='%s'" % (messageName, timestamp))
 
         for k in sorted(properties.keys()):
             value = properties[k]

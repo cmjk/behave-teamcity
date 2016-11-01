@@ -4,10 +4,11 @@ from behave.model_describe import ModelDescriptor
 from teamcity import messages
 from teamcity.messages import TeamcityServiceMessages
 
+
 class BehaveTeamCityServiceMessages(TeamcityServiceMessages):
-    def message(self, messageName, **properties):
+    def message(self, messagename, **properties):
         timestamp = self.now().strftime("%Y-%m-%dT%H:%M:%S.") + "%03d" % (self.now().microsecond / 1000)
-        message = ("\n##teamcity[%s timestamp='%s'" % (messageName, timestamp))
+        message = ("\n##teamcity[%s timestamp='%s'" % (messagename, timestamp))
 
         for k in sorted(properties.keys()):
             value = properties[k]
@@ -33,12 +34,12 @@ class TeamcityFormatter(Formatter):
         self.current_scenario = None
         self.current_step = None
         self.msg = messages.TeamcityServiceMessages()
+        self.step_messages = None
 
     def feature(self, feature):
         self.current_feature = feature
         self.current_scenario = None
         self.current_step = None
-        self.msg.testSuiteStarted(self.current_feature.name)
 
     def scenario(self, scenario):
         self.step_messages = ''
@@ -47,8 +48,6 @@ class TeamcityFormatter(Formatter):
 
         self.current_scenario = scenario
         self.current_step = None
-        self.msg.testStarted(self.current_scenario.name, captureStandardOutput='false')
-
 
     def result(self, step_result):
 
@@ -59,17 +58,20 @@ class TeamcityFormatter(Formatter):
             return
 
         if self.current_scenario.status == "passed":
+            self.msg.testStarted(self.current_scenario.name, captureStandardOutput='false')
             self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages[:-1])
             self.step_messages = ''
             self.msg.message('testFinished', name=self.current_scenario.name,
                              duration=str(self.current_scenario.duration), flowId=None)
 
         if self.current_scenario.status == "failed":
+            self.msg.testStarted(self.current_scenario.name, captureStandardOutput='false')
             self.msg.message('testStdErr', name=self.current_scenario.name, out=self.step_messages[:-1])
             self.step_messages = ''
             name = self.current_step.name
+            feature = self.current_feature.name
 
-            error_msg = u"Step failed: {}".format(name)
+            error_msg = u"Feature: {}.Step failed: {}".format(feature, name)
             if self.current_step.table:
                 table = ModelDescriptor.describe_table(self.current_step.table, None)
                 error_msg = u"{}\nTable:\n{}".format(error_msg, table)
@@ -85,4 +87,4 @@ class TeamcityFormatter(Formatter):
                              duration=str(self.current_scenario.duration), flowId=None)
 
     def eof(self):
-        self.msg.testSuiteFinished(self.current_feature.name)
+        pass

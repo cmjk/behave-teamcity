@@ -71,7 +71,7 @@ class TeamcityFormatter(Formatter):
             name = self.current_step.name
             feature = self.current_feature.name
 
-            error_msg = u"Feature: {}.Step failed: {}".format(feature, name)
+            error_msg = u"Feature: {}. Step failed: {}".format(feature, name)
             if self.current_step.table:
                 table = ModelDescriptor.describe_table(self.current_step.table, None)
                 error_msg = u"{}\nTable:\n{}".format(error_msg, table)

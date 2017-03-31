@@ -33,7 +33,7 @@ class TeamcityFormatter(Formatter):
         self.current_feature = None
         self.current_scenario = None
         self.current_step = None
-        self.msg = messages.TeamcityServiceMessages()
+        self.msg = messages.TeamcityServiceMessages(encoding='utf-8')
         self.step_messages = None
 
     def feature(self, feature):
